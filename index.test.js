@@ -45,3 +45,29 @@ describe('whitespaceChar', () => {
 		expect(whitespaceChar('\n')).toEqual(['', '\n']);
 	});
 });
+
+describe('attributePair', () => {
+	it('should parse the given attribute', () => {
+		expect(attributePair('class="node"')).toEqual(['', ['class', 'node']]);
+		expect(attributePair('style="position: absolute;"')).toEqual([
+			'',
+			['style', 'position: absolute;'],
+		]);
+		expect(attributePair('data-level="3"')).toEqual(['', ['data-level', '3']]);
+	});
+});
+
+describe('attributes', () => {
+	it('should parse all of the attributes', () => {
+		expect(
+			attributes(' class="node"  style="position: absolute;"		data-level="3" />'),
+		).toEqual([
+			' />',
+			[
+				['class', 'node'],
+				['style', 'position: absolute;'],
+				['data-level', '3'],
+			],
+		]);
+	});
+});

@@ -47,8 +47,18 @@ const whitespace1 = input => {
 	return oneOrMore(whitespaceChar)(input);
 };
 
+const attributePair = input => {
+	return pair(identifier, right(pair(matchLiteral('='), quotedString)))(input);
+};
+
+const attributes = input => {
+	return zeroOrMore(right(pair(whitespace1, attributePair)))(input);
+};
+
 module.exports = {
 	identifier,
 	whitespaceChar,
 	quotedString,
+	attributePair,
+	attributes,
 };
