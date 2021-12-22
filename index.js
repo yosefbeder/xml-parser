@@ -5,6 +5,11 @@ const {
 	isWhitespace,
 	anyCharacter,
 	zeroOrMore,
+	pair,
+	matchLiteral,
+	map,
+	left,
+	right,
 } = require('./utils');
 
 const identifier = input => {
@@ -26,7 +31,19 @@ const whitespaceChar = input => {
 	pred(anyCharacter(input), result => isWhitespace(result));
 };
 
+const quotedString = input => {
+	const quoteParser = matchLiteral('"');
+	const valueParser = zeroOrMore(pred(anyCharacter, result => result !== '"'));
+
+	const startParser = map(right(pair(quoteParser, valueParser)), result =>
+		result.join(''),
+	);
+
+	return left(pair(startParser, quoteParser))(input);
+};
+
 module.exports = {
 	identifier,
 	whitespaceChar,
+	quotedString,
 };
