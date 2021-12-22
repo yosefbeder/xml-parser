@@ -1,4 +1,10 @@
-const { identifier, quotedString } = require('./index.js');
+const {
+	identifier,
+	quotedString,
+	attributes,
+	attributePair,
+	whitespaceChar,
+} = require('./index.js');
 
 describe('identifier', () => {
 	it('should match alphabetical, numeric, and - and return the rest of the string', () => {
@@ -29,5 +35,13 @@ describe('quotedString', () => {
 
 	it("should throw an error if the last item isn't a double quote", () => {
 		expect(() => quotedString('"cool-stuff')).toThrowError('');
+	});
+});
+
+describe('whitespaceChar', () => {
+	it('should parse whitespaces, tabs, and new lines', () => {
+		expect(whitespaceChar(' ddd')).toEqual(['ddd', ' ']);
+		expect(whitespaceChar('\t')).toEqual(['', '\t']);
+		expect(whitespaceChar('\n')).toEqual(['', '\n']);
 	});
 });

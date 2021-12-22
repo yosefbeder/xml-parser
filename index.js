@@ -10,6 +10,7 @@ const {
 	map,
 	left,
 	right,
+	oneOrMore,
 } = require('./utils');
 
 const identifier = input => {
@@ -27,10 +28,6 @@ const identifier = input => {
 	return [nextInput2, [result1, ...result2].join('')];
 };
 
-const whitespaceChar = input => {
-	pred(anyCharacter(input), result => isWhitespace(result));
-};
-
 const quotedString = input => {
 	const quoteParser = matchLiteral('"');
 	const valueParser = zeroOrMore(pred(anyCharacter, result => result !== '"'));
@@ -40,6 +37,14 @@ const quotedString = input => {
 	);
 
 	return left(pair(startParser, quoteParser))(input);
+};
+
+const whitespaceChar = input => {
+	return pred(anyCharacter, result => isWhitespace(result))(input);
+};
+
+const whitespace1 = input => {
+	return oneOrMore(whitespaceChar)(input);
 };
 
 module.exports = {
