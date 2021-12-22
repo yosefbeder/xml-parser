@@ -2,6 +2,7 @@ const {
 	isAlphabetical,
 	isNumeric,
 	pred,
+	isWhitespace,
 	anyCharacter,
 	zeroOrMore,
 } = require('./utils');
@@ -21,6 +22,11 @@ const identifier = input => {
 	return [nextInput2, [result1, ...result2].join('')];
 };
 
+const whitespaceChar = input => {
+	pred(anyCharacter(input), result => isWhitespace(result));
+};
+
 module.exports = {
 	identifier,
+	whitespaceChar,
 };
