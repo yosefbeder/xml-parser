@@ -4,6 +4,8 @@ const {
 	attributes,
 	attributePair,
 	whitespaceChar,
+	elementStart,
+	singleElement,
 } = require('./index.js');
 
 describe('identifier', () => {
@@ -68,6 +70,47 @@ describe('attributes', () => {
 				['style', 'position: absolute;'],
 				['data-level', '3'],
 			],
+		]);
+	});
+});
+
+describe('elementStart', () => {
+	it('should parse the element and return the name and attributes', () => {
+		expect(
+			elementStart(
+				'<div class="node" style="position: absolute;" data-level="3" />',
+			),
+		).toEqual([
+			' />',
+			[
+				'div',
+				[
+					['class', 'node'],
+					['style', 'position: absolute;'],
+					['data-level', '3'],
+				],
+			],
+		]);
+	});
+});
+
+describe('singleElement', () => {
+	it('should return and object that represents the element', () => {
+		expect(
+			singleElement(
+				'<div class="node" style="position: absolute;" data-level="3" />',
+			),
+		).toEqual([
+			'',
+			{
+				name: 'div',
+				attributes: [
+					['class', 'node'],
+					['style', 'position: absolute;'],
+					['data-level', '3'],
+				],
+				children: [],
+			},
 		]);
 	});
 });

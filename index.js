@@ -47,6 +47,10 @@ const whitespace1 = input => {
 	return oneOrMore(whitespaceChar)(input);
 };
 
+const whitespace0 = input => {
+	return zeroOrMore(whitespaceChar)(input);
+};
+
 const attributePair = input => {
 	return pair(identifier, right(pair(matchLiteral('='), quotedString)))(input);
 };
@@ -55,10 +59,23 @@ const attributes = input => {
 	return zeroOrMore(right(pair(whitespace1, attributePair)))(input);
 };
 
+const elementStart = input => {
+	return pair(right(pair(matchLiteral('<'), identifier)), attributes)(input);
+};
+
+const singleElement = input => {
+	return map(
+		left(pair(elementStart, pair(whitespace0, matchLiteral('/>')))),
+		([name, attributes]) => ({ name, attributes, children: [] }),
+	)(input);
+};
+
 module.exports = {
 	identifier,
 	whitespaceChar,
 	quotedString,
 	attributePair,
 	attributes,
+	elementStart,
+	singleElement,
 };
