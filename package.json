@@ -1,0 +1,13 @@
+{
+	"name": "parsing-javascript",
+	"version": "1.0.0",
+	"main": "index.js",
+	"author": "yosefbeder",
+	"license": "MIT",
+	"scripts": {
+		"test": "jest"
+	},
+	"devDependencies": {
+		"jest": "^27.4.5"
+	}
+}
