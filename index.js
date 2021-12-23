@@ -79,23 +79,22 @@ const openElement = input => {
 	)(input);
 };
 
-const parentElement = input => {
+function parentElement(input) {
 	return andThen(openElement, ({ name, attributes }) => {
 		return input => {
 			const [nextInput, children] = left(
-				zeroOrMore(
-					right(
-						whitespace0,
-						left(either(singleElement, parentElement), whitespace0),
-					),
-				),
+				zeroOrMore(right(whitespace0, left(element, whitespace0))),
 				matchLiteral(`</${name}>`),
 			)(input);
 
 			return [nextInput, { name, attributes, children }];
 		};
 	})(input);
-};
+}
+
+function element(input) {
+	return either(singleElement, parentElement)(input);
+}
 
 module.exports = {
 	identifier,
