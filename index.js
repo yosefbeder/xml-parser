@@ -11,6 +11,8 @@ const {
 	left,
 	right,
 	oneOrMore,
+	andThen,
+	either,
 } = require('./utils');
 
 const identifier = input => {
@@ -70,6 +72,31 @@ const singleElement = input => {
 	)(input);
 };
 
+const openElement = input => {
+	return map(
+		left(elementStart, pair(whitespace0, matchLiteral('>'))),
+		([name, attributes]) => ({ name, attributes, children: [] }),
+	)(input);
+};
+
+const parentElement = input => {
+	return andThen(openElement, ({ name, attributes }) => {
+		return input => {
+			const [nextInput, children] = left(
+				zeroOrMore(
+					right(
+						whitespace0,
+						left(either(singleElement, parentElement), whitespace0),
+					),
+				),
+				matchLiteral(`</${name}>`),
+			)(input);
+
+			return [nextInput, { name, attributes, children }];
+		};
+	})(input);
+};
+
 module.exports = {
 	identifier,
 	whitespaceChar,
@@ -80,4 +107,5 @@ module.exports = {
 	attributes,
 	elementStart,
 	singleElement,
+	parentElement,
 };

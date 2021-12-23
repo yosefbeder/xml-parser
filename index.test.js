@@ -6,6 +6,7 @@ const {
 	whitespaceChar,
 	elementStart,
 	singleElement,
+	parentElement,
 } = require('./index.js');
 
 describe('identifier', () => {
@@ -110,6 +111,57 @@ describe('singleElement', () => {
 					['data-level', '3'],
 				],
 				children: [],
+			},
+		]);
+	});
+});
+
+describe('parentElement', () => {
+	it('should parse the element and its closing tag', () => {
+		expect(
+			parentElement(
+				'<div class="node" style="position: absolute;" data-level="3"></div>',
+			),
+		).toEqual([
+			'',
+			{
+				name: 'div',
+				attributes: [
+					['class', 'node'],
+					['style', 'position: absolute;'],
+					['data-level', '3'],
+				],
+				children: [],
+			},
+		]);
+	});
+
+	it('should parse the elements inside', () => {
+		expect(
+			parentElement(
+				'<div class="node" style="position: absolute;" data-level="3">\n\t<div class="node node--left"></div>\n\t<div class="node node--right" />\n</div>',
+			),
+		).toEqual([
+			'',
+			{
+				name: 'div',
+				attributes: [
+					['class', 'node'],
+					['style', 'position: absolute;'],
+					['data-level', '3'],
+				],
+				children: [
+					{
+						name: 'div',
+						attributes: [['class', 'node node--left']],
+						children: [],
+					},
+					{
+						name: 'div',
+						attributes: [['class', 'node node--right']],
+						children: [],
+					},
+				],
 			},
 		]);
 	});
