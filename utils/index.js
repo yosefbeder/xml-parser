@@ -93,6 +93,24 @@ const pred = (parser, predicate) => {
 	};
 };
 
+const either = (parser1, parser2) => {
+	return input => {
+		try {
+			return parser1(input);
+		} catch (_) {
+			return parser2(input);
+		}
+	};
+};
+
+const andThen = (parser, fn) => {
+	return input => {
+		const [nextInput, result1] = parser(input);
+
+		return fn(result1)(nextInput);
+	};
+};
+
 module.exports = {
 	isAlphabetical,
 	isNumeric,
@@ -106,4 +124,6 @@ module.exports = {
 	zeroOrMore,
 	anyCharacter,
 	pred,
+	either,
+	andThen,
 };

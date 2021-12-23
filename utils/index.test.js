@@ -6,8 +6,11 @@ const {
 	oneOrMore,
 	pred,
 	anyCharacter,
+	either,
+	andThen,
+	right,
 } = require('./index.js');
-const { identifier } = require('../index.js');
+const { identifier, whitespace1 } = require('../index.js');
 
 describe('matchLiteral', () => {
 	const parser = matchLiteral('ha');
@@ -100,5 +103,35 @@ describe('pred', () => {
 
 	it('should throw the error thrown from the parser passed', () => {
 		expect(() => anyCharacter('')).toThrowError('');
+	});
+});
+
+describe('either', () => {
+	const parser = either(matchLiteral('yosef'), matchLiteral('mostafa'));
+
+	it('should skip the second if the first works fine', () => {
+		expect(parser('yosef')).toEqual(['', null]);
+	});
+
+	it('should apply the second if the first one threw an error', () => {
+		expect(parser('mostafa')).toEqual(['', null]);
+	});
+
+	it('should throw an error if both parsers failed', () => {
+		expect(() => parser('zozo')).toThrowError('zozo');
+	});
+});
+
+describe('andThen', () => {
+	const parser = andThen(identifier, name => {
+		return input => {
+			return right(whitespace1, matchLiteral(name))(input);
+		};
+	});
+
+	it('should apply the created parser to the part that the previous parser left', () => {
+		expect(parser('yosef yosef beder')).toEqual([' beder', null]);
+		expect(() => parser('yosef beder')).toThrowError('beder');
+		expect(() => parser('yosefyosef')).toThrowError('');
 	});
 });

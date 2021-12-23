@@ -73,6 +73,8 @@ const singleElement = input => {
 module.exports = {
 	identifier,
 	whitespaceChar,
+	whitespace1,
+	whitespace0,
 	quotedString,
 	attributePair,
 	attributes,
