@@ -1,6 +1,6 @@
 {
-	"name": "parsing-javascript",
-	"version": "1.0.0",
+	"name": "xml-parser",
+	"version": "0.1.0",
 	"main": "index.js",
 	"author": "yosefbeder",
 	"license": "MIT",
