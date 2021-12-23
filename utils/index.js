@@ -31,9 +31,11 @@ const map = (parser, mapFn) => {
 	};
 };
 
-const left = parser => map(parser, result => result[0]);
+const left = (parser1, parser2) =>
+	map(pair(parser1, parser2), result => result[0]);
 
-const right = parser => map(parser, result => result[1]);
+const right = (parser1, parser2) =>
+	map(pair(parser1, parser2), result => result[1]);
 
 const oneOrMore = parser => {
 	return input => {

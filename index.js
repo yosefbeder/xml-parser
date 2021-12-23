@@ -32,11 +32,11 @@ const quotedString = input => {
 	const quoteParser = matchLiteral('"');
 	const valueParser = zeroOrMore(pred(anyCharacter, result => result !== '"'));
 
-	const startParser = map(right(pair(quoteParser, valueParser)), result =>
+	const startParser = map(right(quoteParser, valueParser), result =>
 		result.join(''),
 	);
 
-	return left(pair(startParser, quoteParser))(input);
+	return left(startParser, quoteParser)(input);
 };
 
 const whitespaceChar = input => {
@@ -52,20 +52,20 @@ const whitespace0 = input => {
 };
 
 const attributePair = input => {
-	return pair(identifier, right(pair(matchLiteral('='), quotedString)))(input);
+	return pair(identifier, right(matchLiteral('='), quotedString))(input);
 };
 
 const attributes = input => {
-	return zeroOrMore(right(pair(whitespace1, attributePair)))(input);
+	return zeroOrMore(right(whitespace1, attributePair))(input);
 };
 
 const elementStart = input => {
-	return pair(right(pair(matchLiteral('<'), identifier)), attributes)(input);
+	return pair(right(matchLiteral('<'), identifier), attributes)(input);
 };
 
 const singleElement = input => {
 	return map(
-		left(pair(elementStart, pair(whitespace0, matchLiteral('/>')))),
+		left(elementStart, pair(whitespace0, matchLiteral('/>'))),
 		([name, attributes]) => ({ name, attributes, children: [] }),
 	)(input);
 };
